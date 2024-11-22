@@ -1,0 +1,144 @@
+.example-card {
+  max-width: 600px;
+}
+
+.card2 {
+  // max-width: 265px !important;
+  box-shadow: 5px 10px 18px #888888;
+}
+
+.a-link {
+  cursor: pointer;
+  color: blue !important;
+}
+
+.js {
+  justify-content: center !important;
+}
+
+img.small:hover {
+  border: 2px lightblue dashed;
+  cursor: pointer;
+}
+
+table:hover {
+  border: 2px lightblue dashed;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+// .js:last-child {
+//     justify-content: start;
+// }
+
+//
+
+.ribbon {
+  position: relative;
+  float: inline-start;
+  margin-bottom: 30px;
+  background-size: cover;
+  text-transform: uppercase;
+  color: white;
+}
+
+.ribbon-red {
+  position: absolute;
+  top: -22.1px;
+  right: 5px;
+}
+.ribbon-green {
+  position: absolute;
+  top: -22.1px;
+  right: 5px;
+}
+
+.ribbon-red:after {
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-top: 10px solid #f44336;
+}
+.ribbon-green:after {
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-top: 10px solid #4caf50;
+}
+
+.ribbon-red span {
+  position: relative;
+  display: block;
+  text-align: center;
+  background: #f44336;
+  font-size: 14px;
+  line-height: 2.5;
+  padding: 12px 8px 10px;
+  border-top-right-radius: 8px;
+  width: 50px;
+}
+.ribbon-green span {
+  position: relative;
+  display: block;
+  text-align: center;
+  background: #4caf50;
+  font-size: 14px;
+  line-height: 2.5;
+  padding: 12px 8px 10px;
+  border-top-right-radius: 8px;
+  width: 50px;
+}
+
+.ribbon-red span:before,
+.ribbon-red span:after {
+  position: absolute;
+  content: '';
+}
+.ribbon-green span:before,
+.ribbon-green span:after {
+  position: absolute;
+  content: '';
+}
+
+.ribbon-red span:before {
+  height: 6px;
+  width: 6px;
+  left: -6px;
+  top: 0;
+  background: #f44336;
+}
+.ribbon-green span:before {
+  height: 6px;
+  width: 6px;
+  left: -6px;
+  top: 0;
+  background: #4caf50;
+}
+
+.ribbon-red span:after {
+  height: 6px;
+  width: 8px;
+  left: -8px;
+  top: 0;
+  border-radius: 8px 8px 0 0;
+  background: #b71c1c;
+}
+
+.ribbon-green span:after {
+  height: 6px;
+  width: 8px;
+  left: -8px;
+  top: 0;
+  border-radius: 8px 8px 0 0;
+  background: #1b5e20;
+}
+.mr-10-IMP {
+  margin-left: 1%;
+}

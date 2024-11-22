@@ -1,0 +1,178 @@
+<mat-card class="mb-20" *ngIf="!params.surveyorId">
+  <mat-card-content>
+    <mat-card-title *ngIf="typeId == '1'">
+      {{ title | uppercase }}
+      <i color="warn" [ngClass]="{ 'fa fa-cog fa-spin': loading }"></i>
+    </mat-card-title>
+    <mat-card-title *ngIf="typeId == '2'">
+      {{ titleNew | uppercase }}
+      <i color="warn" [ngClass]="{ 'fa fa-cog fa-spin': loading }"></i>
+    </mat-card-title>
+    <section class="example-section">
+      <mat-form-field class="mr-1">
+        <mat-select [(ngModel)]="selectedSurveyor" placeholder="Select Surveyor">
+          <mat-option *ngFor="let item of surveyorList" [value]="item.id | orderBy : item.employee_name"
+            >{{ item.employee_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width mr-5-IMP">
+        <input
+          [(ngModel)]="startDate"
+          [matDatepicker]="picker0"
+          [max]="maxDate"
+          [min]="minDate"
+          matInput
+          placeholder="Choose a start date"
+          readonly
+        />
+        <mat-datepicker-toggle [for]="picker0" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker0></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="example-full-width mr-5-IMP">
+        <input
+          [(ngModel)]="endDate"
+          [matDatepicker]="picker1"
+          [max]="maxDate"
+          [min]="minDate"
+          matInput
+          placeholder="Choose a end date"
+          readonly
+        />
+        <mat-datepicker-toggle [for]="picker1" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+    </section>
+
+    <section>
+      <button [disabled]="loadingData" (click)="getData()" class="mr-1" color="primary" mat-raised-button>
+        Submit
+      </button>
+      <button [disabled]="loadingData" (click)="resetFilter()" class="mr-1" color="primary" mat-raised-button>
+        Reset Filter
+      </button>
+    </section>
+  </mat-card-content>
+</mat-card>
+
+<ng-container *ngIf="tableData.length > 0">
+  <div class="container-fluid" *ngIf="tableData.length > 0">
+    <div class="row"></div>
+    <div class="row js">
+      <ng-container *ngFor="let item of tableData; let i = index">
+        <mat-card class="col-md-3 example-card card2 ml-3 mt-3">
+          <div class="ribbon">
+            <img
+              *ngIf="!item.isExternalUrl"
+              mat-card-image
+              class="small"
+              src="{{ ip }}{{ item.image_url }}"
+              width="250"
+              height="430"
+              alt=""
+              (click)="setSelectedItem(item); showChildModal()"
+            />
+            <img
+              *ngIf="item.isExternalUrl"
+              mat-card-image
+              class="small"
+              src="{{ item.image_url }}"
+              width="250"
+              height="430"
+              alt=""
+              (click)="setSelectedItem(item); showChildModal()"
+            />
+          </div>
+
+          <mat-card-content>
+            <table class="table" style="cursor: pointer">
+              <tr>
+                <!-- test -->
+                <th>Surveyor Code</th>
+                <td>{{ item?.code }}</td>
+              </tr>
+              <tr>
+                <th>Surveyor Name</th>
+                <td>{{ item?.name }}</td>
+              </tr>
+              <tr>
+                <th>Work Type</th>
+                <td>{{ item?.work_type }}</td>
+              </tr>
+              <tr>
+                <th>Remark</th>
+                <td>{{ item?.remarks }}</td>
+              </tr>
+              <tr>
+                <th>Visit Date</th>
+                <td>{{ item?.visit_date }}</td>
+              </tr>
+              <tr>
+                <th>visit Time</th>
+                <td>{{ item?.time }}</td>
+              </tr>
+              <tr>
+                <th>Latitude</th>
+                <td>{{ item?.latitude }}</td>
+              </tr>
+              <tr>
+                <th>Longitude</th>
+                <td>{{ item?.longitude }}</td>
+              </tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<div class="row" *ngIf="loading">
+  <div class="col-md-12 text-center">
+    <div class="img-center">
+      <img src="assets/images/basicloader.gif" alt="" srcset="" />
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="!loading && tableData.length == 0">
+  <div class="col-md-12 text-center">
+    <div class="alert alert-info">
+      <p>No Data Found</p>
+    </div>
+    <!-- <div class="img-center">
+            <img src="assets/images/basicloader.gif" alt="" srcset="">
+        </div> -->
+  </div>
+</div>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-child-name" class="modal-title pull-left">
+          {{ selectedItem.full_name }}
+        </h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body text-center">
+        <img
+          *ngIf="!selectedItem.isExternalUrl"
+          src="{{ ip }}{{ selectedItem.image_url }}"
+          alt=""
+          style="width: 100%; height: 500px"
+        />
+        <img
+          *ngIf="selectedItem.isExternalUrl"
+          src="{{ selectedItem.image_url }}"
+          alt=""
+          style="width: 100%; height: 500px"
+        />
+      </div>
+    </div>
+  </div>
+</div>
