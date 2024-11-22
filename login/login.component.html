@@ -1,0 +1,58 @@
+<ngx-spinner bdColor="rgba(0,0,0,0.8)" size="medium" color="#fafafa" type="ball-scale-multiple" [fullScreen]="true">
+  <p style="color: white">Loading...</p></ngx-spinner
+>
+
+<div class="login-page">
+  <div class="content">
+    <form #f="ngForm" class="login-form" fxFlex>
+      <div class="text-center">
+        <h2 class="app-name">
+          {{ appName }}
+        </h2>
+      </div>
+      <div fxFlex fxlayout="row" fxlayout.lt-md="column">
+        <div fxFlexFill>
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              name="userName"
+              placeholder="User Name"
+              [(ngModel)]="loginForm.userName"
+              #userName="ngModel"
+              required
+            />
+            <mat-error *ngIf="userName.invalid">User name is required.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlex fxLayout="row" fxLayout.lt-md="column">
+        <div fxFlexFill>
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              type="password"
+              placeholder="Password"
+              name="password"
+              [(ngModel)]="loginForm.password"
+              #password="ngModel"
+              required
+            />
+            <mat-error *ngIf="password.invalid">Password is required.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- <div fxFlex fxLayout="row" fxLayoutAlign="end start" style="margin-top: 0;">
+        <a href="#" (click)="forgotPassword()" class="forgot-password-link">
+          Forgot Password?
+        </a>
+      </div> -->
+      <div fxFlex fxLayout="row" fxLayout.lt-md="column" style="margin: 20px 0 30px 0">
+        <div fxFlexFill>
+          <button [disabled]="f.invalid" mat-raised-button color="primary" class="w-100" (click)="onLogin(f.value)">
+            Login
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
