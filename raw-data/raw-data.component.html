@@ -1,0 +1,317 @@
+<mat-card class="mb-20">
+  <mat-card-content>
+    <mat-card-title>
+      {{ title | uppercase }}
+      <i color="warn" [ngClass]="{ 'fa fa-cog fa-spin': loadingData }"></i>
+      <small style="color: lightseagreen !important" class="mtb-5-IMP" *ngIf="loadingReportMessage">Downloading</small>
+    </mat-card-title>
+    <ng-container>
+      <section class="example-section" *ngIf="selectedQuery.date == 'Y'">
+        <mat-form-field class="example-full-width mr-10-IMP">
+          <input
+            matInput
+            [min]="minDate"
+            [max]="maxDate"
+            [matDatepicker]="picker0"
+            [(ngModel)]="startDate"
+            placeholder="Choose a start date"
+            readonly
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker0"></mat-datepicker-toggle>
+          <mat-datepicker #picker0></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="example-full-width mr-10-IMP">
+          <input
+            matInput
+            [min]="minDate"
+            [max]="maxDate"
+            [matDatepicker]="picker1"
+            [(ngModel)]="endDate"
+            placeholder="Choose a end date"
+            readonly
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </section>
+      <section class="example-section">
+        <mat-form-field class="example-margin mr-10-IMP">
+          <mat-select placeholder="Query Type" name="queryList" [(ngModel)]="selectedQuery">
+            <ng-container *ngFor="let query of queryList">
+              <mat-option [value]="query">{{ query.title }}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <!-- <mat-form-field class="example-full-width mr-10-IMP">
+        <input
+          matInput
+          [min]="minDate"
+          [max]="maxDate"
+          [matDatepicker]="picker0"
+          [(ngModel)]="startDate"
+          placeholder="Choose a start date"
+          readonly
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker0"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker0></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="example-full-width mr-10-IMP">
+        <input
+          matInput
+          [min]="minDate"
+          [max]="maxDate"
+          [matDatepicker]="picker1"
+          [(ngModel)]="endDate"
+          placeholder="Choose a end date"
+          readonly
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker1"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field> -->
+        <ng-container
+          *ngIf="
+            (zones?.length > 0 && selectedQuery.zone == 'Y' && selectedQuery.id == '23') || selectedQuery.id == '30'
+          "
+        >
+          <mat-form-field class="mr-2">
+            <!-- <mat-select (selectionChange)="getRegionsByZoneId()" [(ngModel)]="selectedZone" name='Region'
+          placeholder="Selected Region">
+          <mat-option *ngFor="let zone of zones" [value]="zone.id">{{zone.title}}</mat-option>
+        </mat-select> -->
+            <mat-select
+              (selectionChange)="filtersData('zone')"
+              placeholder="Selected Region"
+              name="Region"
+              [(ngModel)]="selectedZone"
+              multiple
+              #RegionSelect="ngModel"
+              [compareWith]="equals"
+            >
+              <!-- <mat-option disabled="disabled" class="filter-option">
+              <button
+                mat-raised-button
+                class="mat-primary fill text-sm"
+                (click)="selectAll(RegionSelect, zones, 'zone')"
+              >
+                Select All
+              </button>
+              <button
+                mat-raised-button
+                color="warn"
+                class="ml-1 mat-accent fill text-sm"
+                (click)="deselectAll(RegionSelect, 'zone')"
+              >
+                Deselect All
+              </button>
+            </mat-option> -->
+
+              <mat-option [value]="zone" *ngFor="let zone of zones">{{ zone.title }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field
+            *ngIf="regions?.length > 0 && selectedQuery.region == 'Y' && selectedZone.length == 1"
+            class="mr-2"
+          >
+            <mat-select
+              (selectionChange)="filtersData('territory')"
+              [(ngModel)]="selectedRegion"
+              name="Territory"
+              placeholder="Selected Territory"
+              multiple
+              #TerritorySelect="ngModel"
+              [compareWith]="equals"
+            >
+              <mat-option disabled="disabled" class="filter-option">
+                <button
+                  mat-raised-button
+                  class="mat-primary fill text-sm"
+                  (click)="selectAll(TerritorySelect, regions, 'territory')"
+                >
+                  Select All
+                </button>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  class="ml-1 mat-accent fill text-sm"
+                  (click)="deselectAll(TerritorySelect, 'territory')"
+                >
+                  Deselect All
+                </button>
+              </mat-option>
+              <mat-option *ngFor="let region of regions" [value]="region">{{ region.title }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field *ngIf="cities?.length > 0 && selectedQuery.city == 'Y'" class="mr-2">
+            <mat-select
+              [(ngModel)]="selectedTown"
+              name="Town"
+              placeholder="Selected Town"
+              multiple
+              #TownSelect="ngModel"
+              [compareWith]="equals"
+            >
+              <mat-option disabled="disabled" class="filter-option">
+                <button
+                  mat-raised-button
+                  class="mat-primary fill text-sm"
+                  (click)="selectAll(TownSelect, cities, 'town')"
+                >
+                  Select All
+                </button>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  class="ml-1 mat-accent fill text-sm"
+                  (click)="deselectAll(TownSelect, 'town')"
+                >
+                  Deselect All
+                </button>
+              </mat-option>
+              <mat-option *ngFor="let city of cities" [value]="city">{{ city.title }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+        <ng-container
+          *ngIf="zones?.length > 0 && selectedQuery.zone == 'Y' && selectedQuery.id != '23' && selectedQuery.id != '30'"
+        >
+          <mat-form-field class="mr-2">
+            <!-- <mat-select (selectionChange)="getRegionsByZoneId()" [(ngModel)]="selectedZone" name='Region'
+            placeholder="Selected Region">
+            <mat-option *ngFor="let zone of zones" [value]="zone.id">{{zone.title}}</mat-option>
+          </mat-select> -->
+            <mat-select
+              (selectionChange)="filterData('zone')"
+              placeholder="Selected Region"
+              name="Region"
+              [(ngModel)]="selectedZone"
+              multiple
+              #RegionSelect="ngModel"
+              [compareWith]="equals"
+            >
+              <mat-option disabled="disabled" class="filter-option">
+                <button
+                  mat-raised-button
+                  class="mat-primary fill text-sm"
+                  (click)="selectAll(RegionSelect, zones, 'zone')"
+                >
+                  Select All
+                </button>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  class="ml-1 mat-accent fill text-sm"
+                  (click)="deselectAll(RegionSelect, 'zone')"
+                >
+                  Deselect All
+                </button>
+              </mat-option>
+
+              <mat-option [value]="zone" *ngFor="let zone of zones">{{ zone.title }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field *ngIf="regions?.length > 0 && selectedQuery.region == 'Y'" class="mr-2">
+            <mat-select
+              (selectionChange)="filterData('territory')"
+              [(ngModel)]="selectedRegion"
+              name="Territory"
+              placeholder="Selected Territory"
+              multiple
+              #TerritorySelect="ngModel"
+              [compareWith]="equals"
+            >
+              <mat-option disabled="disabled" class="filter-option">
+                <button
+                  mat-raised-button
+                  class="mat-primary fill text-sm"
+                  (click)="selectAll(TerritorySelect, regions, 'territory')"
+                >
+                  Select All
+                </button>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  class="ml-1 mat-accent fill text-sm"
+                  (click)="deselectAll(TerritorySelect, 'territory')"
+                >
+                  Deselect All
+                </button>
+              </mat-option>
+              <mat-option *ngFor="let region of regions" [value]="region">{{ region.title }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field *ngIf="cities?.length > 0 && selectedQuery.city == 'Y'" class="mr-2">
+            <mat-select
+              [(ngModel)]="selectedTown"
+              name="Town"
+              placeholder="Selected Town"
+              multiple
+              #TownSelect="ngModel"
+              [compareWith]="equals"
+            >
+              <mat-option disabled="disabled" class="filter-option">
+                <button
+                  mat-raised-button
+                  class="mat-primary fill text-sm"
+                  (click)="selectAll(TownSelect, cities, 'town')"
+                >
+                  Select All
+                </button>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  class="ml-1 mat-accent fill text-sm"
+                  (click)="deselectAll(TownSelect, 'town')"
+                >
+                  Deselect All
+                </button>
+              </mat-option>
+              <mat-option *ngFor="let city of cities" [value]="city">{{ city.title }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+      </section>
+      <section class="example-section" *ngIf="selectedQuery.month == 'Y'">
+        <mat-form-field class="example-margin mr-10-IMP">
+          <mat-select placeholder="Select Month" name="selectedMonth" [(ngModel)]="selectedMonthName">
+            <mat-option *ngFor="let month of monthList" [value]="month.key">{{ month.value }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+      <section class="example-section" *ngIf="selectedQuery.year == 'Y'">
+        <mat-form-field class="example-margin mr-10-IMP">
+          <mat-select placeholder="Select Year" name="selectedYear" [(ngModel)]="selectedYear">
+            <mat-option *ngFor="let year of yearList" [value]="year.value">{{ year.value }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+      <section class="example-section" *ngIf="selectedQuery.date == 'Y'"></section>
+      <section class="example-section" *ngIf="selectedQuery.id == 23 || selectedQuery.id == 30">
+        <button
+          [disabled]="loadingData || (selectedQuery.zone == 'Y' && selectedZone.length != 1)"
+          mat-raised-button
+          color="warn"
+          (click)="getDashboardDataNew()"
+        >
+          Download
+        </button>
+      </section>
+
+      <section class="example-section" *ngIf="selectedQuery.id != 23 && selectedQuery.id != 30">
+        <button
+          [disabled]="loadingData || (selectedQuery.zone == 'Y' && selectedZone?.length == 0)"
+          mat-raised-button
+          color="warn"
+          (click)="getDashboardDataNew()"
+        >
+          Download
+        </button>
+      </section>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
